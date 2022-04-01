@@ -1,0 +1,43 @@
+{
+  "name": "dashboard-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node src/server.ts",
+    "local": "NODE_ENV=local DEBUG_LEVEL=info DEBUG=* ts-node-dev --respawn --transpile-only -r tsconfig-paths/register ./src/server.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.2",
+    "cors": "^2.8.5",
+    "debug": "^4.3.2",
+    "dot-prop": "^6.0.1",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "flat": "^5.0.2",
+    "glob": "^7.2.0",
+    "helmet": "^5.0.2",
+    "http-status-codes": "^2.2.0",
+    "i18n": "^0.14.2",
+    "is-plain-object": "^5.0.0",
+    "joi": "^17.6.0",
+    "mongoose": "^5.12.12",
+    "nanoid": "^3.3.2",
+    "ts-node-dev": "^1.1.8",
+    "tslib": "^2.3.1",
+    "unset-value": "^2.0.1",
+    "winston": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.12",
+    "@types/debug": "^4.1.7",
+    "@types/express": "^4.17.13",
+    "@types/flat": "^5.0.2",
+    "@types/glob": "^7.2.0",
+    "tsconfig-paths": "^3.14.1"
+  }
+}
