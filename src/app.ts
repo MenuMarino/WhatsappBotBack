@@ -42,7 +42,7 @@ export default class App {
   }
 
   #listen(): Promise<void> {
-    const port = 3000;
+    const port = 8080;
     const server = http.createServer(this.instance);
 
     return new Promise((resolve, reject) =>

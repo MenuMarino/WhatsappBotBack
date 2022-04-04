@@ -4,6 +4,7 @@ import { omit } from '../../../helpers/omit';
 import { Method } from '../../../types/methods';
 import UserModel from '../models/user.model';
 import Logger from '../../../helpers/logger';
+import TokenModel from '../models/token.model';
 
 const logger = Logger.create('dashboard:signup');
 
@@ -33,12 +34,12 @@ class Signup {
     const user = new UserModel({ name, email, password });
     await user.save();
 
+    const token = await TokenModel.generateToken(user._id);
+
     logger.info(`User ${name}<${email}> registered`);
     return {
-      user: omit(
-        user.toJSON(),
-        '_id password plan activationToken updatedAt __v  paymentMethods'
-      ),
+      user: omit(user.toJSON(), '_id password createdAt updatedAt __v'),
+      token,
     };
   }
 }

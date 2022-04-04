@@ -9,7 +9,7 @@ export class Datasource {
 
   private constructor() {
     const dbname = process.env.DBNAME;
-    const uri = process.env.URI;
+    const uri = process.env.URI!;
 
     const connectOptions: mongoose.ConnectOptions = {
       useFindAndModify: false,
