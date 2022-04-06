@@ -2,6 +2,11 @@ import bcrypt from 'bcryptjs';
 import { Document, Schema } from 'mongoose';
 import datasource from '../../../helpers/datasource';
 
+export enum Role {
+  ADMIN = 'admin',
+  CLIENT = 'client',
+}
+
 export interface IUser extends Document {
   name: string;
   email: string;
@@ -25,6 +30,12 @@ const UserSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
+    },
+    role: {
+      type: String,
+      required: true,
+      default: 'client',
+      enum: ['admin', 'client'],
     },
   },
   { timestamps: true }

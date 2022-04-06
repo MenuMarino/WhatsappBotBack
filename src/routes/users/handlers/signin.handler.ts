@@ -6,7 +6,7 @@ import UserModel from '../models/user.model';
 import TokenModel from '../models/token.model';
 import { omit } from '../../../helpers/omit';
 
-const logger = Logger.create('ms-forms:router:signin');
+const logger = Logger.create('dashboard:router:signin');
 
 const SigninSchema = Joi.object().keys({
   email: Joi.string().email().required(),
