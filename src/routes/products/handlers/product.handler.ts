@@ -16,8 +16,11 @@ class Product {
 
     logger.info(`Saving product: ${product_tag}`);
 
-    const product = new ProductModel({ product_tag, ...values });
-    await product.save();
+    const product = await ProductModel.findOneAndUpdate(
+      { product_tag },
+      { ...values },
+      { new: true, upsert: true }
+    );
 
     return {
       product: omit(product.toJSON(), '_id __v updatedAt'),
