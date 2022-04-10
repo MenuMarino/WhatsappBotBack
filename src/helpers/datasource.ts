@@ -19,7 +19,6 @@ export class Datasource {
       bufferCommands: false,
       keepAlive: true,
       keepAliveInitialDelay: 5000,
-      ssl: false,
       sslValidate: false,
     };
 
