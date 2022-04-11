@@ -18,6 +18,15 @@ export default (app: Application) => {
     const wrapper = async (req: Request, res: Response) => {
       logger.info(`Requesting [${handler.method}] ${handler.route}`);
       try {
+        if (handler.schema) {
+          const { error } = handler.schema.validate(req.body);
+
+          if (error) {
+            logger.debug(error);
+            throw new Error(error.message);
+          }
+        }
+
         logger.debug('Request: %O', req.body);
         const data = await handler.on(req, res);
         logger.debug('Response: %O', data);
