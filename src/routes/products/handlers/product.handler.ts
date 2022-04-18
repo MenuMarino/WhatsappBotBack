@@ -8,15 +8,19 @@ const logger = Logger.create('dashboard:router:product');
 
 class Product {
   readonly method = Method.POST;
-  readonly route = '/api/product';
+  readonly route = '/api/product/';
   readonly middlewares = [];
 
   async on(req: Request): Promise<any> {
-    const { product_tag, ...values } = req.body;
+    const { product_tag, category, subcategory, ...values } = req.body;
 
     logger.info(`Saving product: ${product_tag}`);
 
-    const productInDB = await ProductModel.findOne({ product_tag });
+    const productInDB = await ProductModel.findOne({
+      product_tag,
+      category,
+      subcategory,
+    });
     let product = {} as IProduct;
 
     if (productInDB) {
@@ -31,6 +35,8 @@ class Product {
     } else {
       product = new ProductModel({
         product_tag,
+        category,
+        subcategory,
         body: { tracked: 1, ...values },
       });
       await product.save();

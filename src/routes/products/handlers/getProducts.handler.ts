@@ -9,16 +9,21 @@ const logger = Logger.create('dashboard:router:get-products');
 
 class GetProducts {
   readonly method = Method.GET;
-  readonly route = '/api/product';
+  readonly route = '/api/product/:category/:subcategory';
   readonly middlewares = [auth];
 
   async on(req: Request): Promise<any> {
+    const { category, subcategory } = req.params;
+
     logger.info('Finding all products');
 
-    const products = await ProductModel.find({});
+    const products = await ProductModel.find({ category, subcategory });
     // Borrar data de MongoDB
     const productsData = products.map((product) => ({
-      product: omit(product.toJSON(), '_id __v updatedAt createdAt'),
+      product: omit(
+        product.toJSON(),
+        '_id __v updatedAt createdAt category subcategory'
+      ),
     }));
     // Hacer un array de objetos que tengan el product_tag y el body del producto (tracked, store, ...)
     const parsedProducts = productsData.map((prod) => ({
