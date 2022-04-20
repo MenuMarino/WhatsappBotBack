@@ -2,6 +2,8 @@ import mongoose, { Connection } from 'mongoose';
 
 import Logger from './logger';
 
+require('dotenv').config();
+
 const logger = Logger.create('dashboard:datasource');
 
 export class Datasource {

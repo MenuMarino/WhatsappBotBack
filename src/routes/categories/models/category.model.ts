@@ -1,10 +1,9 @@
 import { Document, ObjectId, Schema } from 'mongoose';
-import datasource from 'src/helpers/datasource';
+import datasource from '../../../helpers/datasource';
 
 export interface ICategory extends Document {
   _id: ObjectId;
   name: string;
-  subcategories: ObjectId[];
 }
 
 const CategorySchema = new Schema<ICategory>(

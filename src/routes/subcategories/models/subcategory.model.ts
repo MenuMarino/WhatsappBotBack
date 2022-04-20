@@ -1,5 +1,5 @@
 import { Document, ObjectId, Schema } from 'mongoose';
-import datasource from 'src/helpers/datasource';
+import datasource from '../../../helpers/datasource';
 
 export interface ISubcategory extends Document {
   _id: ObjectId;

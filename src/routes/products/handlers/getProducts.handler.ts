@@ -15,7 +15,9 @@ class GetProducts {
   async on(req: Request): Promise<any> {
     const { category, subcategory } = req.params;
 
-    logger.info('Finding all products');
+    logger.info(
+      `Finding all products. Category: ${category}. Subcategory: ${subcategory}`
+    );
 
     const products = await ProductModel.find({ category, subcategory });
     // Borrar data de MongoDB

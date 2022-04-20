@@ -5,6 +5,8 @@ import express, { Application } from 'express';
 import helmet from 'helmet';
 import createRoutes from './routes';
 import Logger from './helpers/logger';
+import { emitter } from './helpers/emitter';
+import createSubscribers from './suscribers';
 
 require('dotenv').config();
 
@@ -22,7 +24,9 @@ export default class App {
     app.use(helmet());
     app.use(express.urlencoded({ limit: '50mb', extended: true }));
     app.use(express.json({ limit: '50mb' }));
+    app.set('emitter', emitter);
 
+    createSubscribers(app);
     createRoutes(app);
     this.#app = app;
   }

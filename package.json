@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node src/server.ts",
-    "local": "NODE_ENV=local DEBUG_LEVEL=info DEBUG=dashboard:* ts-node-dev --respawn --transpile-only -r tsconfig-paths/register ./src/server.ts"
+    "local": "NODE_ENV=local DEBUG_LEVEL=info DEBUG=dashboard:* ts-node-dev --respawn --transpile-only -r tsconfig-paths/register ./src/server.ts",
+    "seed": "NODE_ENV=local ts-node --transpile-only ./start/seeder.ts"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +17,7 @@
     "debug": "^4.3.2",
     "dot-prop": "^6.0.1",
     "dotenv": "^16.0.0",
+    "events": "^3.3.0",
     "express": "^4.17.3",
     "flat": "^5.0.2",
     "glob": "^7.2.0",
