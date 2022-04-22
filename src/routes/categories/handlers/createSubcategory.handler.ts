@@ -4,6 +4,7 @@ import { omit } from 'src/helpers/omit';
 import auth from 'src/middlewares/auth';
 import SubcategoryModel from 'src/routes/subcategories/models/subcategory.model';
 import { Method } from 'src/types/methods';
+import CategoryModel from '../models/category.model';
 
 const logger = Logger.create('dashboard:router:create-subcategory');
 
@@ -20,6 +21,11 @@ class CreateSubcategory {
 
     const subcategory = new SubcategoryModel({ name, category });
     await subcategory.save();
+
+    await CategoryModel.findOneAndUpdate(
+      { name: category },
+      { $push: { subcategories: name } }
+    );
 
     return {
       subcategory: omit(subcategory.toJSON(), '_id, __v updatedAt'),

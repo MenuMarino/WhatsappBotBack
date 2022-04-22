@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import Logger from 'src/helpers/logger';
 import auth from 'src/middlewares/auth';
-import SubcategoryModel from 'src/routes/subcategories/models/subcategory.model';
+import CategoryModel from '../../categories/models/category.model';
 import { Method } from 'src/types/methods';
 
 const logger = Logger.create('dashboard:router:get-subcategories');
@@ -16,10 +16,13 @@ class GetSubcategories {
 
     logger.info(`Finding all subcategories for ${category}`);
 
-    const subcategories = await SubcategoryModel.find({ category });
+    const categoryInDB = await CategoryModel.findOne({ name: category });
+    if (!categoryInDB) {
+      throw new Error('Category does not exist');
+    }
 
     return {
-      subcategories: subcategories.map((subcategory) => subcategory.name),
+      subcategories: categoryInDB.subcategories,
     };
   }
 }

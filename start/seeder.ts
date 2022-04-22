@@ -6,6 +6,7 @@ import CategoryModel, {
 import SubcategoryModel, {
   ISubcategory,
 } from '../src/routes/subcategories/models/subcategory.model';
+import UserModel from '../src/routes/users/models/user.model';
 
 const logger = Logger.create('dashboard:seed:categories');
 
@@ -18,7 +19,10 @@ const createCategories = async () => {
     let subcategoriesDocument: Promise<ISubcategory>[] = [];
 
     Object.entries(categories).forEach(([key, values]) => {
-      const category = new CategoryModel({ name: key }).save();
+      const category = new CategoryModel({
+        name: key,
+        subcategories: values,
+      }).save();
       categoriesDocuments.push(category);
 
       values.forEach(async (element) => {
@@ -38,6 +42,14 @@ const createCategories = async () => {
     savedSubcategories.forEach((subcategory) =>
       logger.info(`Subcategory created: ${subcategory.name}`)
     );
+
+    const admin = new UserModel({
+      name: 'Admin',
+      email: 'admin@gmail.com',
+      password: '$_4dm1n@',
+      role: 'admin',
+    }).save();
+    await Promise.all([admin]);
   } catch (err) {
     logger.error(err);
   }
