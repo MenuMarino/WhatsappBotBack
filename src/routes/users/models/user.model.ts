@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import { Document, Schema } from 'mongoose';
 import datasource from '../../../helpers/datasource';
+import { nanoid } from 'nanoid';
 
 export enum Role {
   ADMIN = 'admin',
@@ -14,6 +15,7 @@ export interface IUser extends Document {
   categories: string[];
   subcategories: string[];
   role: string;
+  userId: string;
   comparePassword(password: string): Promise<boolean>;
 }
 
@@ -43,6 +45,11 @@ const UserSchema = new Schema<IUser>(
     role: {
       type: String,
       default: Role.CLIENT,
+    },
+    userId: {
+      type: String,
+      required: true,
+      default: () => nanoid(),
     },
   },
   { timestamps: true }

@@ -1,6 +1,7 @@
 import { Request } from 'express';
 import Logger from 'src/helpers/logger';
 import { omit } from 'src/helpers/omit';
+import admin from 'src/middlewares/admin';
 import auth from 'src/middlewares/auth';
 import SubcategoryModel from 'src/routes/subcategories/models/subcategory.model';
 import { Method } from 'src/types/methods';
@@ -11,7 +12,7 @@ const logger = Logger.create('dashboard:router:create-subcategory');
 class CreateSubcategory {
   readonly method = Method.POST;
   readonly route = '/api/category/:category';
-  readonly middlewares = [auth];
+  readonly middlewares = [auth, admin];
 
   async on(req: Request): Promise<any> {
     const { name } = req.body;

@@ -3,14 +3,15 @@ import { omit } from '../../../helpers/omit';
 import { Method } from '../../../types/methods';
 import UserModel from '../models/user.model';
 import Logger from '../../../helpers/logger';
-import TokenModel from '../models/token.model';
+import auth from 'src/middlewares/auth';
+import admin from 'src/middlewares/admin';
 
 const logger = Logger.create('dashboard:create-user');
 
 class CreateUser {
   readonly method = Method.POST;
   readonly route = '/api/create/user';
-  readonly middlewares = [];
+  readonly middlewares = [auth, admin];
 
   async on(req: Request): Promise<any> {
     const { name, email, password, ...values } = req.body;
