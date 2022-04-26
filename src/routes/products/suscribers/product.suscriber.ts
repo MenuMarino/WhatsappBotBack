@@ -1,7 +1,7 @@
 import Logger from 'src/helpers/logger';
 import CategoryModel from 'src/routes/categories/models/category.model';
 import SubcategoryModel from 'src/routes/subcategories/models/subcategory.model';
-import ProductModel, { IProduct } from '../models/product.model';
+import ProductModel from '../models/product.model';
 
 const logger = Logger.create('dashboard:events:product');
 
@@ -13,11 +13,20 @@ class ProductSuscriber {
 
     try {
       // Check if category exists
-      await CategoryModel.findOneAndUpdate(
-        { name: category },
-        { $setOnInsert: { name: category } },
-        { upsert: true }
-      );
+      let categoryInDB = await CategoryModel.findOne({ name: category });
+      if (
+        categoryInDB &&
+        !categoryInDB.subcategories.some((e) => e === subcategory)
+      ) {
+        categoryInDB.subcategories.push(subcategory);
+        await categoryInDB.save();
+      } else {
+        const newCategory = new CategoryModel({
+          name: category,
+          subcategories: [subcategory],
+        });
+        await newCategory.save();
+      }
       // Check if subcategory exists
       await SubcategoryModel.findOneAndUpdate(
         { name: subcategory, category },
@@ -33,7 +42,7 @@ class ProductSuscriber {
 
       if (productInDB) {
         await ProductModel.findOneAndUpdate(
-          { product_tag },
+          { product_tag, category, subcategory },
           {
             product_tag,
             body: { tracked: productInDB.body.tracked + 1, ...values },
