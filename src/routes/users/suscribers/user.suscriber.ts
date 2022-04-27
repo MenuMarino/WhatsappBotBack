@@ -25,7 +25,8 @@ class UserSuscriber {
         text: 'text',
         html: `<b>Dale click a este link para verificar tu cuenta.</b>\
         <br/><br/>\
-        <a href=\'${process.env.DASHBOARDURL}\/api/users/activate/${user.activationToken}'>Verificar cuenta.</a>`,
+        <a href=\'${process.env.FRONTURL}\/verify/${user.activationToken}' target=
+        '_blank\'>Verificar cuenta.</a>`,
       };
       await transporter.sendMail(mailData);
       logger.info('Email sent');
