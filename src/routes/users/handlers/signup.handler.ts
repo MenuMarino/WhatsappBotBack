@@ -5,6 +5,8 @@ import { Method } from '../../../types/methods';
 import UserModel from '../models/user.model';
 import Logger from '../../../helpers/logger';
 import TokenModel from '../models/token.model';
+import { emitter } from 'src/helpers/emitter';
+import { Events } from 'src/helpers/events';
 
 const logger = Logger.create('dashboard:signup');
 
@@ -37,6 +39,7 @@ class Signup {
     const token = await TokenModel.generateToken(user._id);
 
     logger.info(`User ${name}<${email}> registered`);
+    emitter.emit(Events.USER_SIGNUP, user);
     return {
       user: omit(user.toJSON(), '_id password createdAt updatedAt __v'),
       token,

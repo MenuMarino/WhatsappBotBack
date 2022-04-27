@@ -5,6 +5,8 @@ import UserModel from '../models/user.model';
 import Logger from '../../../helpers/logger';
 import auth from 'src/middlewares/auth';
 import admin from 'src/middlewares/admin';
+import { emitter } from 'src/helpers/emitter';
+import { Events } from 'src/helpers/events';
 
 const logger = Logger.create('dashboard:create-user');
 
@@ -26,6 +28,7 @@ class CreateUser {
 
     const user = new UserModel({ name, email, password, ...values });
     await user.save();
+    emitter.emit(Events.USER_SIGNUP, user);
     return {
       user: omit(user.toJSON(), '_id password createdAt updatedAt __v'),
     };

@@ -8,6 +8,10 @@ export enum Role {
   CLIENT = 'client',
 }
 
+export enum UserStatus {
+  ACTIVE = 'active',
+  NEED_VERIFICATION = 'need_verification',
+}
 export interface IUser extends Document {
   name: string;
   email: string;
@@ -16,6 +20,8 @@ export interface IUser extends Document {
   subcategories: string[];
   role: string;
   userId: string;
+  status: string;
+  activationToken: string;
   comparePassword(password: string): Promise<boolean>;
 }
 
@@ -49,6 +55,16 @@ const UserSchema = new Schema<IUser>(
     userId: {
       type: String,
       required: true,
+      default: () => nanoid(),
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: ['active', 'need_verification'],
+      default: UserStatus.NEED_VERIFICATION,
+    },
+    activationToken: {
+      type: String,
       default: () => nanoid(),
     },
   },
