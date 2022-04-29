@@ -7,25 +7,24 @@ const logger = Logger.create('dashboard:events:product');
 
 class ProductSuscriber {
   async onSubmit(body: any) {
-    const { product_tag, category, subcategory, ...values } = body;
+    const { product_tag, category, subcategory, store, share, ...values } =
+      body;
 
     logger.info(`Saving product: ${product_tag}`);
 
     try {
       // Check if category exists
       let categoryInDB = await CategoryModel.findOne({ name: category });
-      if (
-        categoryInDB &&
-        !categoryInDB.subcategories.some((e) => e === subcategory)
-      ) {
-        categoryInDB.subcategories.push(subcategory);
-        await categoryInDB.save();
-      } else {
+
+      if (!categoryInDB) {
         const newCategory = new CategoryModel({
           name: category,
           subcategories: [subcategory],
         });
         await newCategory.save();
+      } else if (!categoryInDB.subcategories.some((e) => e === subcategory)) {
+        categoryInDB.subcategories.push(subcategory);
+        await categoryInDB.save();
       }
       // Check if subcategory exists
       await SubcategoryModel.findOneAndUpdate(
@@ -45,7 +44,12 @@ class ProductSuscriber {
           { product_tag, category, subcategory },
           {
             product_tag,
-            body: { tracked: productInDB.body.tracked + 1, ...values },
+            body: {
+              tracked: productInDB.body.tracked + 1,
+              store: Number(productInDB.body.store + store),
+              share: Number(productInDB.body.share + share),
+              ...values,
+            },
           }
         );
       } else {
@@ -53,7 +57,12 @@ class ProductSuscriber {
           product_tag,
           category,
           subcategory,
-          body: { tracked: 1, ...values },
+          body: {
+            tracked: 1,
+            store: Number(store),
+            share: Number(share),
+            ...values,
+          },
         });
         await product.save();
       }
