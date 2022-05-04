@@ -21,7 +21,6 @@ class Signin {
 
   async on(req: Request): Promise<any> {
     const { email, password } = req.body;
-
     logger.info('Authenticating email', email);
 
     const user = await UserModel.findOne({ email });
@@ -39,7 +38,10 @@ class Signin {
     const token = await TokenModel.generateToken(user._id);
 
     return {
-      user: omit(user.toJSON(), '_id password createdAt updatedAt __v'),
+      user: omit(
+        user.toJSON(),
+        '_id password createdAt updatedAt __v activationToken role'
+      ),
       token,
     };
   }

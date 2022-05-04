@@ -6,7 +6,7 @@ import TokenModel from '../routes/users/models/token.model';
 
 const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    let authorization = req.header('Authorization');
+    let authorization = req.cookies.jwt;
 
     if (!authorization) {
       throw new Error('You are not authenticated');

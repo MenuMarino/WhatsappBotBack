@@ -7,6 +7,7 @@ import createRoutes from './routes';
 import Logger from './helpers/logger';
 import { emitter } from './helpers/emitter';
 import createSubscribers from './suscribers';
+import cookieParser from 'cookie-parser';
 
 require('dotenv').config();
 
@@ -20,7 +21,8 @@ export default class App {
     logger.info('Configuring express application');
 
     const app = express();
-    app.use(cors());
+    app.use(cookieParser());
+    app.use(cors({ credentials: true, origin: 'http://localhost:8081' }));
     app.use(helmet());
     app.use(express.urlencoded({ limit: '50mb', extended: true }));
     app.use(express.json({ limit: '50mb' }));

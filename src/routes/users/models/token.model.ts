@@ -1,6 +1,16 @@
+import { CookieOptions } from 'express';
 import jwt from 'jsonwebtoken';
 import { Document, Model, Schema } from 'mongoose';
 import datasource from 'src/helpers/datasource';
+
+export const COOKIE_OPTIONS: CookieOptions = {
+  httpOnly: true,
+  secure: true,
+  maxAge: 60 * 60 * 1000,
+  sameSite: 'strict',
+  domain: 'localhost',
+  path: '/',
+};
 
 export interface ITokenDocument extends Document {
   _id: string;
