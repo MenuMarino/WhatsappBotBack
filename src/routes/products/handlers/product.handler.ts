@@ -14,6 +14,7 @@ class Product {
   async on(req: Request): Promise<any> {
     emitter.emit(Events.PRODUCT_SUBMITTED, req.body);
     logger.info('Product saved');
+    return {};
   }
 }
 

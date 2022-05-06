@@ -29,7 +29,7 @@ class Activate {
 
     logger.info('User %s activated', user.email);
 
-    return null;
+    return {};
   }
 }
 
