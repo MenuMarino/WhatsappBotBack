@@ -16,13 +16,17 @@ class GetSubcategories {
 
     logger.info(`Finding all subcategories for ${category}`);
 
-    const categoryInDB = await CategoryModel.findOne({ name: category });
+    const categoryInDB = await CategoryModel.findOne({
+      name: category,
+    }).populate('subcategories');
     if (!categoryInDB) {
       throw new Error('Category does not exist');
     }
 
+    const subcategories = categoryInDB.subcategories.map((sub) => sub.name);
+
     return {
-      subcategories: categoryInDB.subcategories,
+      subcategories,
     };
   }
 }

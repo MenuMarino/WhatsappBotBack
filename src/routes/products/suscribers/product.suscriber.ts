@@ -13,45 +13,49 @@ class ProductSuscriber {
     logger.info(`Saving product: ${product_tag}`);
 
     try {
+      // Check if subcategory exists
+      let subcategoryInDB = await SubcategoryModel.findOne({
+        name: subcategory,
+      });
+      if (!subcategoryInDB) {
+        subcategoryInDB = new SubcategoryModel({
+          name: subcategory,
+        });
+        await subcategoryInDB.save();
+      }
       // Check if category exists
-      let categoryInDB = await CategoryModel.findOne({ name: category });
-
+      let categoryInDB = await CategoryModel.findOne({
+        name: category,
+      }).populate('subcategories');
       if (!categoryInDB) {
         const newCategory = new CategoryModel({
           name: category,
-          subcategories: [subcategory],
+          subcategories: [subcategoryInDB._id],
         });
         await newCategory.save();
-      } else if (!categoryInDB.subcategories.some((e) => e === subcategory)) {
-        categoryInDB.subcategories.push(subcategory);
-        await categoryInDB.save();
+      } else if (
+        !categoryInDB.subcategories.some((e) => e.name === subcategory)
+      ) {
+        await CategoryModel.findOneAndUpdate(
+          { name: category },
+          {
+            $push: { subcategories: subcategoryInDB._id },
+          }
+        );
       }
-      // Check if subcategory exists
-      await SubcategoryModel.findOneAndUpdate(
-        { name: subcategory, category },
-        { $setOnInsert: { name: subcategory, category } },
-        { upsert: true }
-      );
       // Check if product exists
-      const productInDB = await ProductModel.findOne({
+      let productInDB = await ProductModel.findOne({
         product_tag,
         category,
         subcategory,
       });
-
       if (productInDB) {
-        await ProductModel.findOneAndUpdate(
-          { product_tag, category, subcategory },
-          {
-            product_tag,
-            body: {
-              tracked: productInDB.body.tracked + 1,
-              store: Number(productInDB.body.store + store),
-              share: Number(productInDB.body.share + share),
-              ...values,
-            },
-          }
-        );
+        productInDB.body.tracked += 1;
+        productInDB.body.store += Number(store);
+        productInDB.body.share += Number(share);
+        productInDB.body = { ...productInDB.body, ...values };
+        productInDB.markModified('body');
+        await productInDB.save();
       } else {
         const product = new ProductModel({
           product_tag,

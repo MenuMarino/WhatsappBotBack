@@ -4,13 +4,11 @@ import datasource from '../../../helpers/datasource';
 export interface ISubcategory extends Document {
   _id: ObjectId;
   name: string;
-  category: string;
 }
 
 const SubcategorySchema = new Schema<ISubcategory>(
   {
     name: String,
-    category: String,
   },
   { timestamps: true }
 );

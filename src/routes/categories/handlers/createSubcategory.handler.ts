@@ -20,16 +20,19 @@ class CreateSubcategory {
 
     logger.info(`Creating new subcategory: ${name}. Category: ${category}`);
 
-    const subcategory = new SubcategoryModel({ name, category });
+    const subcategory = new SubcategoryModel({ name });
     await subcategory.save();
 
     await CategoryModel.findOneAndUpdate(
       { name: category },
-      { $push: { subcategories: name } }
+      { $push: { subcategories: subcategory._id } }
     );
 
     return {
-      subcategory: omit(subcategory.toJSON(), '_id, __v updatedAt'),
+      subcategory: omit(
+        subcategory.toJSON(),
+        '_id, __v updatedAt subcategories'
+      ),
     };
   }
 }
