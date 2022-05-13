@@ -8,12 +8,11 @@ const logger = Logger.create('dashboard:router:get-subcategories');
 
 class GetSubcategories {
   readonly method = Method.GET;
-  readonly route = '/api/subcategory/:category';
+  readonly route = '/api/subcategory/:category/:getAll?';
   readonly middlewares = [auth];
 
   async on(req: Request): Promise<any> {
-    const { category } = req.params;
-
+    const { category, getAll } = req.params;
     logger.info(`Finding all subcategories for ${category}`);
 
     const categoryInDB = await CategoryModel.findOne({
@@ -23,10 +22,15 @@ class GetSubcategories {
       throw new Error('Category does not exist');
     }
 
-    const subcategories = categoryInDB.subcategories.map((sub) => sub.name);
-
+    const subcategories = categoryInDB.subcategories.map((sub) => {
+      if (sub.show || getAll) return sub.name;
+      else return null;
+    });
+    const filtered = subcategories.filter((element) => {
+      return element != null;
+    }) as any[];
     return {
-      subcategories,
+      subcategories: filtered,
     };
   }
 }

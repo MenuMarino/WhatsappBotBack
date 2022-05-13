@@ -6,12 +6,17 @@ export interface ICategory extends Document {
   _id: ObjectId;
   name: string;
   subcategories: ISubcategory[];
+  show: boolean;
 }
 
 const CategorySchema = new Schema<ICategory>(
   {
     name: String,
     subcategories: [{ type: Schema.Types.ObjectId, ref: 'subcategory' }],
+    show: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
