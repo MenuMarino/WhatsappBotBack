@@ -16,7 +16,7 @@ class EditUser {
   readonly middlewares = [auth, admin];
 
   async on(req: Request): Promise<any> {
-    const { categories, password, userId } = req.body;
+    const { categories, subcategories, password, userId } = req.body;
 
     logger.info(`Updating user with id: ${userId}`);
 
@@ -28,6 +28,7 @@ class EditUser {
 
     if (password) user.password = password;
     user.categories = categories;
+    user.subcategories = subcategories;
     await user.save();
 
     return {

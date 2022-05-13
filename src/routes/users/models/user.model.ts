@@ -22,6 +22,7 @@ export interface IUser extends Document {
   userId: string;
   status: string;
   activationToken: string;
+  recoveryToken: string;
   comparePassword(password: string): Promise<boolean>;
 }
 
@@ -66,6 +67,9 @@ const UserSchema = new Schema<IUser>(
     activationToken: {
       type: String,
       default: () => nanoid(),
+    },
+    recoveryToken: {
+      type: String,
     },
   },
   { timestamps: true }

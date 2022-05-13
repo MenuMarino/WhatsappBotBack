@@ -34,6 +34,28 @@ class UserSuscriber {
       logger.error(err);
     }
   }
+
+  async onForgotPassword(user: IUser) {
+    try {
+      logger.info(
+        `Sending reset password email to ${user.name} <${user.email}>`
+      );
+      const mailData = {
+        from: process.env.MAIL,
+        to: user.email,
+        subject: 'Recuperar contraseña',
+        text: 'text',
+        html: `<b>Dale click a este link para crear una nueva contraseña. (Un solo uso)</b>\
+        <br/><br/>\
+        <a href=\'${process.env.FRONTURL}\/reset/${user.recoveryToken}' target=
+        '_blank\'>Recuperar contraseña.</a>`,
+      };
+      await transporter.sendMail(mailData);
+      logger.info('Email sent');
+    } catch (err) {
+      logger.error(err);
+    }
+  }
 }
 
 export default new UserSuscriber();

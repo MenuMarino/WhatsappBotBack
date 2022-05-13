@@ -15,4 +15,6 @@ export default (app: Application) => {
   emitter.on(Events.PRODUCT_SUBMITTED, ProductSuscriber.onSubmit);
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   emitter.on(Events.USER_SIGNUP, UserSuscriber.onUserSignup);
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  emitter.on(Events.FORGOT_PASSWORD, UserSuscriber.onForgotPassword);
 };

@@ -21,7 +21,7 @@ class GetUsers {
     const usersData = users.map((user) => ({
       user: omit(
         user.toJSON(),
-        '_id __v updatedAt createdAt subcategories password activationToken'
+        '_id __v updatedAt createdAt password activationToken recoveryToken'
       ),
     }));
 

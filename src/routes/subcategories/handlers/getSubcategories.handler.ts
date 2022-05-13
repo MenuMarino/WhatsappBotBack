@@ -3,6 +3,7 @@ import Logger from 'src/helpers/logger';
 import auth from 'src/middlewares/auth';
 import CategoryModel from '../../categories/models/category.model';
 import { Method } from 'src/types/methods';
+import { Role } from 'src/routes/users/models/user.model';
 
 const logger = Logger.create('dashboard:router:get-subcategories');
 
@@ -13,6 +14,7 @@ class GetSubcategories {
 
   async on(req: Request): Promise<any> {
     const { category, getAll } = req.params;
+    const { user } = req;
     logger.info(`Finding all subcategories for ${category}`);
 
     const categoryInDB = await CategoryModel.findOne({
@@ -23,7 +25,11 @@ class GetSubcategories {
     }
 
     const subcategories = categoryInDB.subcategories.map((sub) => {
-      if (sub.show || getAll) return sub.name;
+      if (
+        (sub.show || getAll) &&
+        (user.subcategories.includes(sub.name) || user.role == Role.ADMIN)
+      )
+        return sub.name;
       else return null;
     });
     const filtered = subcategories.filter((element) => {
