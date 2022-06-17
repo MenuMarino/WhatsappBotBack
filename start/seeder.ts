@@ -57,6 +57,7 @@ const createCategories = async () => {
 };
 
 const seeder = async () => {
+  logger.info('Seeding');
   setTimeout(async () => {
     await createCategories();
     process.exit();

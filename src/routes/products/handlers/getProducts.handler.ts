@@ -2,8 +2,9 @@ import { Request } from 'express';
 import Logger from 'src/helpers/logger';
 import { omit } from 'src/helpers/omit';
 import auth from 'src/middlewares/auth';
+import { Role } from 'src/routes/users/models/user.model';
 import { Method } from 'src/types/methods';
-import ProductModel from '../models/product.model';
+import ProductModel, { IProduct } from '../models/product.model';
 
 const logger = Logger.create('dashboard:router:get-products');
 
@@ -19,7 +20,29 @@ class GetProducts {
       `Finding all products. Category: ${category}. Subcategory: ${subcategory}`
     );
 
-    const products = await ProductModel.find({ category, subcategory });
+    if (
+      req.user.role !== Role.ADMIN &&
+      (!req.user.categories.includes(category) ||
+        (subcategory !== 'all-data' &&
+          !req.user.subcategories.includes(subcategory)))
+    ) {
+      throw new Error("You don't have permission to access this resource");
+    }
+    let productsDB = [] as IProduct[];
+
+    if (subcategory === 'all-data') {
+      productsDB = await ProductModel.find({ category });
+    } else {
+      productsDB = await ProductModel.find({ category, subcategory });
+    }
+
+    const products = productsDB.filter((product) => {
+      return (
+        req.user.subcategories.includes(product.subcategory) ||
+        req.user.role == Role.ADMIN
+      );
+    });
+
     // Borrar data de MongoDB
     const productsData = products.map((product) => ({
       product: omit(
