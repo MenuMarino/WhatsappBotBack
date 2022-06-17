@@ -22,7 +22,7 @@ export default class App {
 
     const app = express();
     app.use(cookieParser());
-    app.use(cors({ credentials: true, origin: 'http://localhost:8081' }));
+    app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
     app.use(helmet());
     app.use(express.urlencoded({ limit: '50mb', extended: true }));
     app.use(express.json({ limit: '50mb' }));
@@ -48,7 +48,7 @@ export default class App {
   }
 
   #listen(): Promise<void> {
-    const port = 8080;
+    const port = process.env.PORT;
     const server = http.createServer(this.instance);
 
     return new Promise((resolve, reject) =>
