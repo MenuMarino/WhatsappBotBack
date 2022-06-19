@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import { Method } from './types/methods';
 import Logger from './helpers/logger';
 
-const logger = Logger.create('dashboard:routes');
+const logger = Logger.create('webhook:routes');
 
 export default (app: Application) => {
   logger.info('Configuring router table');
@@ -28,8 +28,11 @@ export default (app: Application) => {
         }
 
         logger.debug('Request: %O', req.body);
-        const { challenge, ...data } = await handler.on(req, res);
+        const { challenge, failed, ...data } = await handler.on(req, res);
         logger.debug('Response: %O', data);
+        if (failed) {
+          return res.status(StatusCodes.FORBIDDEN);
+        }
         if (challenge) {
           return res.status(StatusCodes.OK).send(challenge);
         } else {

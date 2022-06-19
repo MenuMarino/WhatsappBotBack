@@ -27,9 +27,10 @@ class WebhookVerifier {
       if (mode === 'subscribe' && token === verify_token) {
         // Respond with 200 OK and challenge token from the request
         logger.info('WEBHOOK_VERIFIED');
+        return { challenge };
       }
+      return { failed: true };
     }
-    return { challenge };
   }
 }
 

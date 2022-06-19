@@ -1,3 +1,4 @@
+import e from 'cors';
 import { isPlainObject } from 'is-plain-object';
 import unset from 'unset-value';
 const mongoose = require('mongoose');
@@ -76,9 +77,9 @@ export function sendMessage(phone_number_id, token, msg, phone) {
     });
 }
 
-export async function saveInDb(model, phone, name = '', email = '') {
+export async function saveInDb(model, phone, state, name = '', email = '') {
   try {
-    const user = new model({ name, phone, email });
+    const user = new model({ name, phone, email, state });
     await user.save();
     return user;
   } catch (e) {
@@ -100,12 +101,15 @@ export function sendInformation(user, msg, phone_number_id, token, from, url) {
       from
     );
   } else {
-    sendMessage(
-      phone_number_id,
-      token,
-      'Hola, por favor envie su nombre y correo separado por comas.',
-      from
-    );
+    if (user.state === State.PENDING) {
+    } else {
+      sendMessage(
+        phone_number_id,
+        token,
+        'Muchas gracias. Para continuar, bríndeme su nombre y correo electrónico, separado por 1 coma.',
+        from
+      );
+    }
   }
 }
 

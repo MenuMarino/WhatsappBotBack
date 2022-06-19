@@ -11,7 +11,7 @@ import cookieParser from 'cookie-parser';
 
 require('dotenv').config();
 
-const logger = Logger.create('dashboard:app');
+const logger = Logger.create('webhook:app');
 
 export default class App {
   readonly #id: string = nanoid();

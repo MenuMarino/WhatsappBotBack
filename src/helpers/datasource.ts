@@ -4,7 +4,7 @@ import Logger from './logger';
 
 require('dotenv').config();
 
-const logger = Logger.create('dashboard:datasource');
+const logger = Logger.create('webhook:datasource');
 
 export class Datasource {
   readonly connection: Connection;
