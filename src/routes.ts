@@ -3,6 +3,7 @@ import glob from 'glob';
 import { StatusCodes } from 'http-status-codes';
 import { Method } from './types/methods';
 import Logger from './helpers/logger';
+import { COOKIE_OPTIONS } from './routes/admin/models/token.model';
 
 const logger = Logger.create('webhook:routes');
 
@@ -28,10 +29,19 @@ export default (app: Application) => {
         }
 
         logger.debug('Request: %O', req.body);
-        const { challenge, failed, ...data } = await handler.on(req, res);
+        const { challenge, failed, token, ...data } = await handler.on(
+          req,
+          res
+        );
         logger.debug('Response: %O', data);
         if (failed) {
           return res.status(StatusCodes.FORBIDDEN);
+        }
+        if (token) {
+          return res
+            .status(StatusCodes.OK)
+            .cookie('jwt', token, COOKIE_OPTIONS)
+            .json({ status: 'success', data });
         }
         if (challenge) {
           return res.status(StatusCodes.OK).send(challenge);

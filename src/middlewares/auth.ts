@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import jwt from 'jsonwebtoken';
 import { Schema } from 'mongoose';
-import TokenModel from '../routes/users/models/token.model';
+import jwt from 'jsonwebtoken';
+import TokenModel from 'src/routes/admin/models/token.model';
 
 const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -22,15 +22,14 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
     const jwtData = jwt.verify(authorization, process.env.JWTSECRET);
 
     const tokenDB = await TokenModel.findOne({
-      user: (jwtData as { _id: Schema.Types.ObjectId })._id,
+      admin: (jwtData as { _id: Schema.Types.ObjectId })._id,
       token: authorization,
-    }).populate('user');
+    }).populate('admin');
 
     if (!tokenDB) {
       throw new Error('You are not authenticated');
     }
 
-    req.user = tokenDB.user;
     next();
   } catch (err) {
     res

@@ -7,7 +7,7 @@
     "dev": "ts-node src/server.ts",
     "local": "NODE_ENV=local DEBUG_LEVEL=info DEBUG=webhook:* ts-node-dev --respawn --transpile-only -r tsconfig-paths/register ./src/server.ts",
     "localW": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register ./src/server.ts",
-    "seed": "NODE_ENV=local ts-node --transpile-only ./start/seeder.ts"
+    "seed": "NODE_ENV=local DEBUG_LEVEL=info DEBUG=webhook:* ts-node --transpile-only ./start/seeder.ts"
   },
   "author": "",
   "license": "ISC",
