@@ -15,10 +15,7 @@ class GetData {
   async on(req: Request, res: Response): Promise<any> {
     const data = await UserModel.find({});
     const parsedData = data.map((d) => ({
-      data: omit(d.toJSON(), '_id __v'),
-    }));
-    const cleanedData = parsedData.map((d) => ({
-      ...d.data,
+      ...omit(d.toJSON(), '_id __v'),
     }));
     // logger.info(parsedData);
     const parsedHeaders = [
@@ -29,7 +26,7 @@ class GetData {
     ];
 
     return {
-      data: cleanedData,
+      data: parsedData,
       headers: parsedHeaders.map((header) => ({
         Header: header[1],
         accessor: header[0],
