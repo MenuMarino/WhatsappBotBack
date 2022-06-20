@@ -17,13 +17,23 @@ class GetData {
     const parsedData = data.map((d) => ({
       ...omit(d.toJSON(), '_id __v'),
     }));
-    // logger.info(parsedData);
-    const parsedHeaders = [
-      ['state', 'State'],
-      ['name', 'Name'],
-      ['phone', 'Phone'],
-      ['email', 'Email'],
-    ];
+
+    // Obtener los headers de la tabla
+    const headers = parsedData
+      .map((d) => Object.keys(d))
+      .reduce((acc: Record<string, unknown>, value: any) => {
+        value.forEach((s: string) => {
+          acc[s] = true;
+        });
+        return acc;
+      }, {});
+    const parsedHeaders = Object.keys(headers).map((key) => [
+      String(key),
+      (String(key).charAt(0).toUpperCase() + String(key).slice(1)).replace(
+        '_',
+        ' '
+      ),
+    ]);
 
     return {
       data: parsedData,

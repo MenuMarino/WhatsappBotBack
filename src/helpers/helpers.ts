@@ -91,7 +91,7 @@ export function sendInformation(user, msg, phone_number_id, token, from, url) {
   const values = msg.split(',');
   if (values.length >= 2) {
     user.name = values[0];
-    user.email = values[1];
+    user.email = values[1].trim();
     user.state = State.VERIFIED;
     user.save();
     sendMessage(
