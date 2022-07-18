@@ -10,6 +10,7 @@ import {
   State,
 } from 'src/helpers/helpers';
 import UserModel from '../models/user.model';
+import MessageModel from '../models/message.model';
 
 const logger = Logger.create('webhook:handler');
 
@@ -26,11 +27,22 @@ class Webhook {
     if (req.body.object) {
       if (checkBody(body)) {
         logger.info('webhook triggered');
+        let msgId = req.body.entry[0].changes[0].value.messages[0].id;
+        // Save message id to prevent duplicates
+        const msgInDB = await MessageModel.findById(msgId);
+        logger.info(`msgId: ${msgId}`);
+        if (msgInDB) {
+          return {};
+        } else {
+          const msg = new MessageModel({ _id: msgId });
+          await msg.save();
+        }
+
         let phone_number_id =
           req.body.entry[0].changes[0].value.metadata.phone_number_id;
         let from = req.body.entry[0].changes[0].value.messages[0].from; // extract the phone number from the webhook payload
         let msg_body = req.body.entry[0].changes[0].value.messages[0].text.body; // extract the message text from the webhook payload
-        logger.info(`webhook triggered: phone (${from})`);
+        logger.info(`webhook triggered: phone (${from}) msg (${msg_body})`);
         const user = await checkIfExists(UserModel, from);
 
         if (!user) {

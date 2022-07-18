@@ -1,8 +1,11 @@
 import e from 'cors';
 import { isPlainObject } from 'is-plain-object';
 import unset from 'unset-value';
+import Logger from './logger';
 const mongoose = require('mongoose');
 const axios = require('axios').default;
+
+const logger = Logger.create('webhook:helpers');
 
 export const State = {
   NEW: 'new',
@@ -48,7 +51,9 @@ export function checkBody(body) {
     body.entry[0].changes &&
     body.entry[0].changes[0] &&
     body.entry[0].changes[0].value.messages &&
-    body.entry[0].changes[0].value.messages[0]
+    body.entry[0].changes[0].value.messages[0] &&
+    body.entry[0].changes[0].value.messages[0].from &&
+    body.entry[0].changes[0].value.messages[0].text.body
   );
 }
 
@@ -70,12 +75,17 @@ export function sendMessage(phone_number_id, token, msg, phone) {
     headers: { 'Content-Type': 'application/json' },
   })
     .then((res) => {
+      logger.info('message sent');
       // console.log(res);
     })
     .catch((err) => {
-      console.log(err);
+      logger.error('something happened');
+      logger.error(err);
+      // console.log(err);
     });
 }
+
+export function sendTemplate(phone_number_id, from, template, components) {}
 
 export async function saveInDb(model, phone, state, name = '', email = '') {
   try {
