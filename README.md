@@ -1,6 +1,7 @@
 # Dashboard (backend)
 
-- Primero se ejecuta `npm run seed`, este guarda en la base de datos el usuario con rol de administrador.
+- Lo primero es correr `npm install`, para instalar las dependencias del proyecto.
+- Después se ejecuta `npm run seed`, este guarda en la base de datos el usuario con rol de administrador.
 - Para correr el backend se utiliza `npm run local`
 
 ## Dependencias
